@@ -1,17 +1,19 @@
 const http = require('http')
-const { getPlayers } = require('./controllers/playerController')
 
-const server = http.createServer((req, res) => {
-  const { method, url } = req
-  switch (method) {
-    case 'GET':
-      switch (url) {
-        case '/api/players':
-          getPlayers(req, res)
-      }
-  }
-})
+function makeServer(controllers) {
+  const server = http.createServer((req, res) => {
+    const { method, url } = req
+    switch (method) {
+      case 'GET':
+        switch (url) {
+          case '/api/players':
+            controllers.getPlayers(req, res)
+        }
+    }
+  })
+  return (this.server = server)
+}
 
-const PORT = process.env.SERVER_PORT || 5000
-
-server.listen(PORT, () => console.log(`server running on ${PORT}`))
+module.exports = {
+  makeServer,
+}
