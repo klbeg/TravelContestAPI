@@ -4,6 +4,7 @@ const { pool } = require('../database/travel_contest_db')
 async function getPlayers(req, res) {
   try {
     const players = await Players.findAll(pool)
+
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(players))
   } catch (err) {
