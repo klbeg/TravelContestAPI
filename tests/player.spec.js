@@ -27,14 +27,13 @@ describe('GET /players', () => {
   })
 
   describe('calling getPlayers', () => {
-    it('should call pool.connect, query, and end 1 time each.', async () => {
+    it('should call pool.query with correct sql string', async () => {
       pool.query.mockResolvedValueOnce({
         rows: [],
       })
       await getPlayers({}, res, pool)
-      expect(pool.connect).toHaveBeenCalledTimes(1)
       expect(pool.query).toHaveBeenCalledTimes(1)
-      expect(pool.end).toHaveBeenCalledTimes(1)
+      expect(pool.query).toHaveBeenCalledWith('SELECT * FROM player')
     })
 
     it('should call res.writeHead with type "application/json" one time.', async () => {
