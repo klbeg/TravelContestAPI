@@ -1,6 +1,6 @@
-import { Pool } from 'pg'
+const { Pool } = require('pg')
 
-export const pool = new Pool({
+const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
@@ -9,3 +9,7 @@ export const pool = new Pool({
 })
 
 pool.connect()
+
+module.exports = {
+  pool,
+}

@@ -1,5 +1,5 @@
-import { Pool } from 'pg'
-import { getPlayers } from '../controllers/playerController'
+const { Pool } = require('pg')
+const { getPlayers } = require('../controllers/playerController')
 
 jest.mock('pg', () => {
   const mPool = {
