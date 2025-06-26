@@ -1,5 +1,5 @@
-const http = require('http')
-const { getPlayers } = require('./controllers/playerController')
+import http from 'http'
+import { getPlayers } from './controllers/playerController.js'
 
 const server = http.createServer((req, res) => {
   const { method, url } = req
