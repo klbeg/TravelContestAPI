@@ -1,5 +1,4 @@
 const http = require('http')
-const { getPlayers } = require('./controllers/playerController')
 
 function makeServer(controllers) {
   const server = http.createServer((req, res) => {
