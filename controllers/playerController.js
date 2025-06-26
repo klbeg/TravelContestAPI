@@ -1,7 +1,7 @@
-const Players = require('../models/playerModel')
-const { pool } = require('../database/travel_contest_db')
+import { Players } from '../models/playerModel.js'
+import { pool } from '../database/travel_contest_db.js'
 
-async function getPlayers(req, res) {
+export async function getPlayers(req, res) {
   try {
     const players = await Players.findAll(pool)
 
@@ -10,8 +10,4 @@ async function getPlayers(req, res) {
   } catch (err) {
     console.log('Error in player controller: ', err)
   }
-}
-
-module.exports = {
-  getPlayers,
 }
