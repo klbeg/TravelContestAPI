@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test-open": "jest --detectOpenHandles",
     "start": "node --env-file=.env index.js",
     "dev": "nodemon --env-file=.env index.js"
   },
