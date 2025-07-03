@@ -1,5 +1,5 @@
 const Players = require('../models/playerModel')
-const { pool } = require('../database/travel_contest_db')
+const { pool } = require('../db_connect')
 
 async function getPlayers(req, res) {
   try {

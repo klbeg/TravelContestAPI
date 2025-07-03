@@ -1,7 +1,7 @@
 const { makeServer } = require('./server')
 const { controllers } = require('./controllers/index')
 
-const PORT = process.env.SERVER_PORT || 5000
+const PORT = process.env.PORT || 5000
 
 const server = makeServer(controllers)
 
