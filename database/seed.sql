@@ -1,5 +1,3 @@
-CREATE DATABASE travel_contest_db
-
 CREATE TABLE player ( 
 	player_id SERIAL PRIMARY KEY,
 	player_name VARCHAR(18) NOT NULL,
