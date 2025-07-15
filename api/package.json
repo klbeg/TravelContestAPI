@@ -6,8 +6,8 @@
     "test": "jest",
     "test-open": "jest --detectOpenHandles",
     "start-docker": "node index.js",
-    "start": "node --env-file=.env index.js",
-    "dev": "nodemon --env-file=.env index.js"
+    "start": "node --env-file=../.env index.js",
+    "dev": "nodemon --env-file=../.env index.js"
   },
   "author": "kbegdev",
   "license": "ISC",
