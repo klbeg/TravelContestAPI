@@ -1,5 +1,5 @@
 const { Pool } = require('pg')
-const { getPlayers } = require('../controllers/playerController')
+const { getPlayers, getPlayerById } = require('../controllers/playerController')
 
 jest.mock('pg', () => {
   const mPool = {
@@ -17,7 +17,7 @@ const res = {
   end: jest.fn(),
 }
 
-describe('GET /players', () => {
+describe('GET', () => {
   let pool
   beforeEach(() => {
     pool = new Pool()
@@ -26,20 +26,12 @@ describe('GET /players', () => {
     jest.clearAllMocks()
   })
 
-  describe('calling getPlayers', () => {
-    it('should call pool.query to be called one time', async () => {
-      pool.query.mockResolvedValueOnce({
-        rows: [],
-      })
-      await getPlayers({}, res, pool)
-      expect(pool.query).toHaveBeenCalledTimes(1)
-    })
-
+  describe('GET /players => calling getPlayers', () => {
     it('should call res.writeHead with type "application/json" one time', async () => {
       pool.query.mockResolvedValueOnce({
         rows: [],
       })
-      await getPlayers(req, res, pool)
+      await getPlayers(req, res)
       expect(res.writeHead).toHaveBeenCalledTimes(1)
       expect(res.writeHead).toHaveBeenCalledWith(200, {
         'Content-Type': 'application/json',
@@ -57,7 +49,37 @@ describe('GET /players', () => {
         ],
       }
       pool.query.mockResolvedValueOnce(mock)
-      await getPlayers(req, res, pool)
+      await getPlayers(req, res)
+      expect(res.end).toHaveBeenCalledTimes(1)
+      expect(res.end).toHaveBeenCalledWith(JSON.stringify(mock.rows))
+    })
+  })
+
+  describe('GET /player/:id => calling getPlayerById', () => {
+    it('should call res.writeHead with type "application/json" one time', async () => {
+      pool.query.mockResolvedValueOnce({
+        rows: [],
+      })
+      await getPlayerById(req, res, 1)
+      expect(res.writeHead).toHaveBeenCalledTimes(1)
+      expect(res.writeHead).toHaveBeenCalledWith(200, {
+        'Content-Type': 'application/json',
+      })
+    })
+
+    it('should find the player and call res.end one time with mock data', async () => {
+      const mock = {
+        rows: [
+          {
+            player_id: 1,
+            player_name: 'test person',
+            email: 'test@email.com',
+            password: 'testpass',
+          },
+        ],
+      }
+      pool.query.mockResolvedValueOnce(mock)
+      await getPlayerById(req, res, 1)
       expect(res.end).toHaveBeenCalledTimes(1)
       expect(res.end).toHaveBeenCalledWith(JSON.stringify(mock.rows))
     })

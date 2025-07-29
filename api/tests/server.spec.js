@@ -3,7 +3,8 @@ const supertest = require('supertest')
 const { makeServer } = require('../server.js')
 
 const getPlayers = jest.fn()
-const controllers = { getPlayers }
+const getPlayerById = jest.fn()
+const controllers = { getPlayers, getPlayerById }
 
 const server = makeServer(controllers)
 
@@ -33,6 +34,20 @@ describe('http server', () => {
     test('should call getPlayers once', async () => {
       await supertest(server).get('/api/players')
       expect(controllers.getPlayers).toHaveBeenCalledTimes(1)
+    })
+  })
+  describe('GET /player/:id', () => {
+    beforeEach(() => {
+      getPlayerById.mockReset()
+      getPlayerById.mockImplementation((req, res, id) => {
+        res.end()
+      })
+    })
+
+    test('should call getPlayerById once with a player id', async () => {
+      await supertest(server).get('/api/player/1')
+      expect(controllers.getPlayerById).toHaveBeenCalledTimes(1)
+      expect(controllers.getPlayerById.mock.calls[0][2]).toBe(1)
     })
   })
 })

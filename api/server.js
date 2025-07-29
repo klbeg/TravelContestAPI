@@ -3,23 +3,26 @@ const http = require('http')
 function makeServer(controllers) {
   const server = http.createServer((req, res) => {
     const { method, url } = req
-    console.log('url', url.split('/'))
+    let abbrUrl = url.split('/').slice(2).join('/')
     switch (method) {
       case 'GET':
-        switch (url) {
-          case '/api/players':
-            controllers.getPlayers(req, res)
-            break
-          default:
-            res.writeHead(400, { 'Content-Type': 'application/json' })
-            res.end(
-              JSON.stringify({
-                message: "The specified route doesn't exist",
-              })
-            )
-            break
+        if (abbrUrl.match('players')) {
+          controllers.getPlayers(req, res)
+          break
+        } else if (abbrUrl.match('player/([0-9]+)')) {
+          const id = Number(abbrUrl.split('/')[1])
+          controllers.getPlayerById(req, res, id)
+          break
+        } else {
+          res.writeHead(400, { 'Content-Type': 'application/json' })
+          res.end(
+            JSON.stringify({
+              message: "The specified route doesn't exist",
+            })
+          )
+          break
         }
-        break
+
       default:
         res.writeHead(400, { 'Content-Type': 'application/json' })
         res.end(
