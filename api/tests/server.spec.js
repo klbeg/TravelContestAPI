@@ -5,7 +5,8 @@ const { makeServer } = require('../server.js')
 const getPlayers = jest.fn()
 const getPlayerById = jest.fn()
 const createPlayer = jest.fn()
-const controllers = { getPlayers, getPlayerById, createPlayer }
+const deletePlayer = jest.fn()
+const controllers = { getPlayers, getPlayerById, createPlayer, deletePlayer }
 
 const server = makeServer(controllers)
 
@@ -64,6 +65,21 @@ describe('http server', () => {
     test('should call createPlayer once', async () => {
       await supertest(server).post('/api/player')
       expect(controllers.createPlayer).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('DELETE /player/:id', () => {
+    beforeEach(() => {
+      getPlayerById.mockReset()
+      getPlayerById.mockImplementation((req, res, id) => {
+        res.end()
+      })
+    })
+
+    test('should call getPlayerById once with a player id', async () => {
+      await supertest(server).del('/api/player/1')
+      expect(controllers.deletePlayer).toHaveBeenCalledTimes(1)
+      expect(controllers.deletePlayer.mock.calls[0][2]).toBe(1)
     })
   })
 })

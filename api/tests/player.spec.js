@@ -3,6 +3,7 @@ const {
   getPlayers,
   getPlayerById,
   createPlayer,
+  deletePlayer,
 } = require('../controllers/playerController')
 
 jest.mock('pg', () => {
@@ -118,6 +119,32 @@ describe('GET', () => {
       expect(res.end).toHaveBeenCalledWith(
         JSON.stringify({
           message: 'New player created.  id: 12',
+        })
+      )
+    })
+  })
+
+  describe('DELETE /player/:id => calling deletePlayer', () => {
+    it('should call res.writeHead once with type "application/json"', async () => {
+      pool.query.mockResolvedValueOnce({
+        rows: [{ player_id: 12 }],
+      })
+      await deletePlayer(req, res, 1)
+      expect(res.writeHead).toHaveBeenCalledTimes(1)
+      expect(res.writeHead).toHaveBeenCalledWith(200, {
+        'Content-Type': 'application/json',
+      })
+    })
+
+    it('should call res.end once with correct data', async () => {
+      pool.query.mockResolvedValueOnce({
+        rows: [{ player_id: 12 }],
+      })
+      await deletePlayer(req, res, 12)
+      expect(res.end).toHaveBeenCalledTimes(1)
+      expect(res.end).toHaveBeenCalledWith(
+        JSON.stringify({
+          message: 'Player with id 12 deleted',
         })
       )
     })

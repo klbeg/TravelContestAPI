@@ -32,8 +32,21 @@ function create(pool, player) {
   })
 }
 
+function deleteRecord(pool, id) {
+  return new Promise(async (resolve, reject) => {
+    const query = {
+      text: 'DELETE FROM player WHERE player_id = $1',
+      values: [id],
+    }
+
+    const { rows } = await pool.query(query)
+    resolve(rows[0])
+  })
+}
+
 module.exports = {
   findAll,
   findById,
   create,
+  deleteRecord,
 }

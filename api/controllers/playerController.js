@@ -47,8 +47,23 @@ async function createPlayer(req, res) {
   }
 }
 
+async function deletePlayer(req, res, id) {
+  try {
+    const player = await Players.deleteRecord(pool, id)
+
+    const message = {
+      message: `Player with id ${player.player_id} deleted`,
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify(message))
+  } catch (err) {
+    console.log('Error in player controller: ', err)
+  }
+}
+
 module.exports = {
   getPlayers,
   getPlayerById,
   createPlayer,
+  deletePlayer,
 }
