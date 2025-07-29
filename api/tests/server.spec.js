@@ -4,7 +4,8 @@ const { makeServer } = require('../server.js')
 
 const getPlayers = jest.fn()
 const getPlayerById = jest.fn()
-const controllers = { getPlayers, getPlayerById }
+const createPlayer = jest.fn()
+const controllers = { getPlayers, getPlayerById, createPlayer }
 
 const server = makeServer(controllers)
 
@@ -36,6 +37,7 @@ describe('http server', () => {
       expect(controllers.getPlayers).toHaveBeenCalledTimes(1)
     })
   })
+
   describe('GET /player/:id', () => {
     beforeEach(() => {
       getPlayerById.mockReset()
@@ -48,6 +50,20 @@ describe('http server', () => {
       await supertest(server).get('/api/player/1')
       expect(controllers.getPlayerById).toHaveBeenCalledTimes(1)
       expect(controllers.getPlayerById.mock.calls[0][2]).toBe(1)
+    })
+  })
+
+  describe('POST /player', () => {
+    beforeEach(() => {
+      createPlayer.mockReset()
+      createPlayer.mockImplementation((req, res, id) => {
+        res.end()
+      })
+    })
+
+    test('should call createPlayer once', async () => {
+      await supertest(server).post('/api/player')
+      expect(controllers.createPlayer).toHaveBeenCalledTimes(1)
     })
   })
 })

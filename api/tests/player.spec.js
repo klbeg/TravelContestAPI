@@ -1,5 +1,9 @@
 const { Pool } = require('pg')
-const { getPlayers, getPlayerById } = require('../controllers/playerController')
+const {
+  getPlayers,
+  getPlayerById,
+  createPlayer,
+} = require('../controllers/playerController')
 
 jest.mock('pg', () => {
   const mPool = {
@@ -10,7 +14,15 @@ jest.mock('pg', () => {
   return { Pool: jest.fn(() => mPool) }
 })
 
-const req = {}
+const req = {
+  on: jest.fn((event, callback) => {
+    if (event === 'data') {
+      callback(Buffer.from(JSON.stringify({ data: 'first chunk' })))
+    } else if (event === 'end') {
+      callback()
+    }
+  }),
+}
 
 const res = {
   writeHead: jest.fn(),
@@ -27,7 +39,7 @@ describe('GET', () => {
   })
 
   describe('GET /players => calling getPlayers', () => {
-    it('should call res.writeHead with type "application/json" one time', async () => {
+    it('should call res.writeHead once with type "application/json"', async () => {
       pool.query.mockResolvedValueOnce({
         rows: [],
       })
@@ -38,7 +50,7 @@ describe('GET', () => {
       })
     })
 
-    it('should return call res.end one time with mock data', async () => {
+    it('should return call res.end once with correct data', async () => {
       const mock = {
         rows: [
           {
@@ -56,7 +68,7 @@ describe('GET', () => {
   })
 
   describe('GET /player/:id => calling getPlayerById', () => {
-    it('should call res.writeHead with type "application/json" one time', async () => {
+    it('should call res.writeHead once with type "application/json"', async () => {
       pool.query.mockResolvedValueOnce({
         rows: [],
       })
@@ -67,7 +79,7 @@ describe('GET', () => {
       })
     })
 
-    it('should find the player and call res.end one time with mock data', async () => {
+    it('should call res.end once with correct data', async () => {
       const mock = {
         rows: [
           {
@@ -82,6 +94,32 @@ describe('GET', () => {
       await getPlayerById(req, res, 1)
       expect(res.end).toHaveBeenCalledTimes(1)
       expect(res.end).toHaveBeenCalledWith(JSON.stringify(mock.rows))
+    })
+  })
+
+  describe('POST /player => calling createPlayer', () => {
+    it('should call res.writeHead once with type "application/json"', async () => {
+      pool.query.mockResolvedValueOnce({
+        rows: [{ player_id: 12 }],
+      })
+      await createPlayer(req, res)
+      expect(res.writeHead).toHaveBeenCalledTimes(1)
+      expect(res.writeHead).toHaveBeenCalledWith(201, {
+        'Content-Type': 'application/json',
+      })
+    })
+
+    it('should call res.end once with correct message', async () => {
+      pool.query.mockResolvedValueOnce({
+        rows: [{ player_id: 12 }],
+      })
+      await createPlayer(req, res)
+      expect(res.end).toHaveBeenCalledTimes(1)
+      expect(res.end).toHaveBeenCalledWith(
+        JSON.stringify({
+          message: 'New player created.  id: 12',
+        })
+      )
     })
   })
 })

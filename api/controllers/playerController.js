@@ -1,5 +1,6 @@
 const Players = require('../models/playerModel')
 const { pool } = require('../db_connect')
+const { getPostData } = require('../utils/dbUtils')
 
 async function getPlayers(req, res) {
   try {
@@ -22,7 +23,32 @@ async function getPlayerById(req, res, id) {
   }
 }
 
+async function createPlayer(req, res) {
+  try {
+    const body = await getPostData(req)
+
+    const { player_name, email, password } = JSON.parse(body)
+    const player = {
+      player_name,
+      email,
+      password,
+    }
+
+    let newPlayer = await Players.create(pool, player)
+
+    const message = {
+      message: `New player created.  id: ${newPlayer.player_id}`,
+    }
+
+    res.writeHead(201, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify(message))
+  } catch (err) {
+    console.log('Error in player controller: ', err)
+  }
+}
+
 module.exports = {
   getPlayers,
   getPlayerById,
+  createPlayer,
 }

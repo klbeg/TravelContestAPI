@@ -20,7 +20,20 @@ function findById(pool, id) {
   })
 }
 
+function create(pool, player) {
+  return new Promise(async (resolve, reject) => {
+    const query = {
+      text: 'INSERT INTO player(player_name, email, password) VALUES($1, $2, $3) RETURNING player_id, player_name',
+      values: [player.player_name, player.email, player.password],
+    }
+
+    const { rows } = await pool.query(query)
+    resolve(rows[0])
+  })
+}
+
 module.exports = {
   findAll,
   findById,
+  create,
 }

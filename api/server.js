@@ -23,6 +23,20 @@ function makeServer(controllers) {
           break
         }
 
+      case 'POST':
+        if (abbrUrl.match('player')) {
+          controllers.createPlayer(req, res)
+          break
+        } else {
+          res.writeHead(400, { 'Content-Type': 'application/json' })
+          res.end(
+            JSON.stringify({
+              message: "The specified route doesn't exist",
+            })
+          )
+          break
+        }
+
       default:
         res.writeHead(400, { 'Content-Type': 'application/json' })
         res.end(
