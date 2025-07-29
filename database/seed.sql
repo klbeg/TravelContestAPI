@@ -1,6 +1,7 @@
 CREATE TABLE player ( 
 	player_id SERIAL PRIMARY KEY,
 	player_name VARCHAR(18) NOT NULL,
+  email VARCHAR(100) NOT NULL,
 	password VARCHAR(16) NOT NULL
 );
 CREATE TABLE contest ( 
@@ -10,8 +11,11 @@ CREATE TABLE contest (
 CREATE TABLE trip (
   trip_id SERIAL PRIMARY KEY,
   player_id int REFERENCES player (player_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  trip_from VARCHAR(255),
-  trip_to VARCHAR(255)
+  start_location VARCHAR(255),
+  destination VARCHAR(255),
+  begin_date DATE,
+  end_date DATE,
+  trip_score NUMERIC
 );
 
 CREATE TABLE player_contest ( 
