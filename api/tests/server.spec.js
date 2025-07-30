@@ -70,13 +70,13 @@ describe('http server', () => {
 
   describe('DELETE /player/:id', () => {
     beforeEach(() => {
-      getPlayerById.mockReset()
-      getPlayerById.mockImplementation((req, res, id) => {
+      deletePlayer.mockReset()
+      deletePlayer.mockImplementation((req, res, id) => {
         res.end()
       })
     })
 
-    test('should call getPlayerById once with a player id', async () => {
+    test('should call deletePlayer once with a player id', async () => {
       await supertest(server).del('/api/player/1')
       expect(controllers.deletePlayer).toHaveBeenCalledTimes(1)
       expect(controllers.deletePlayer.mock.calls[0][2]).toBe(1)

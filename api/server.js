@@ -41,6 +41,7 @@ function makeServer(controllers) {
         if (abbrUrl.match('player/([0-9]+)')) {
           const id = Number(abbrUrl.split('/')[1])
           controllers.deletePlayer(req, res, id)
+          break
         } else {
           res.writeHead(400, { 'Content-Type': 'application/json' })
           res.end(
