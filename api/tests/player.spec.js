@@ -148,5 +148,14 @@ describe('GET', () => {
         })
       )
     })
+
+    it('should call res.end once with an error message if player not found', async () => {
+      pool.query.mockResolvedValueOnce({ rows: [] })
+      await deletePlayer(req, res, 13)
+      expect(res.end).toHaveBeenCalledTimes(1)
+      expect(res.end).toHaveBeenCalledWith(
+        JSON.stringify({ message: 'No player exists with that id' })
+      )
+    })
   })
 })

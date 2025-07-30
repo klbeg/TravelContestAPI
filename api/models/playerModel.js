@@ -35,7 +35,7 @@ function create(pool, player) {
 function deleteRecord(pool, id) {
   return new Promise(async (resolve, reject) => {
     const query = {
-      text: 'DELETE FROM player WHERE player_id = $1',
+      text: 'DELETE FROM player WHERE player_id = $1 RETURNING player_id',
       values: [id],
     }
 
